@@ -17,6 +17,8 @@ df = pd.get_dummies(df, drop_first=True)
 X = df.drop("Churn", axis=1)
 y = df["Churn"]
 
+feature_columns = X.columns.tolist()
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 model = LogisticRegression(max_iter=1000)
@@ -28,3 +30,6 @@ print("Accuracy:", accuracy_score(y_test, y_pred))
 
 with open("models/model.pkl", "wb") as f:
     pickle.dump(model, f)
+
+with open("models/feature_columns.pkl", "wb") as f:
+    pickle.dump(feature_columns, f)
