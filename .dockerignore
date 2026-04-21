@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Sanal ortam
+venv/
+.venv/
+env/
+
+# Ortam degiskenleri
+.env
+.env.*
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/
+notebooks/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker (ic ice build onleme)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Dokuemantasyon
+README.md
+LICENSE
