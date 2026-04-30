@@ -11,18 +11,6 @@ from sklearn.metrics import (
 
 
 def evaluate_model(model, X_test: pd.DataFrame, y_test: pd.Series, model_name: str = "Model") -> dict:
-    """
-    Verilen bir modeli test verisi uzerinde degerlendirir ve metrikleri rapor eder.
-
-    Args:
-        model: Egitilmis sklearn modeli.
-        X_test: Test ozellik matrisi.
-        y_test: Gercek etiketler.
-        model_name: Raporda gorunecek model ismi.
-
-    Returns:
-        dict: Hesaplanan metrikler.
-    """
     y_pred = model.predict(X_test)
 
     metrics = {
@@ -47,22 +35,12 @@ def evaluate_model(model, X_test: pd.DataFrame, y_test: pd.Series, model_name: s
 
 
 def compare_models(results: list[dict]) -> dict:
-    """
-    Birden fazla modelin metriklerini karsilastirir ve F1 Score'a gore kazanani secer.
-
-    Args:
-        results: Her biri evaluate_model() ciktisi olan dict listesi.
-
-    Returns:
-        dict: En yuksek F1 Score'a sahip modelin metrikleri.
-    """
     best = max(results, key=lambda r: r["f1_score"])
     print(f"\n>>> Kazanan Model: {best['model']} (F1: {best['f1_score']:.4f}) <<<\n")
     return best
 
 
 if __name__ == "__main__":
-    # Dogrudan calistirma icin: python src/evaluate.py
     df = pd.read_csv("data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
     df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
     df = df.dropna()
