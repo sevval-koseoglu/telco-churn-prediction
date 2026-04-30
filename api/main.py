@@ -1,6 +1,7 @@
 import sys
 import os
 
+# Proje kök dizinini Python yoluna ekle; src modüllerinin import edilebilmesi için gereklidir.
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fastapi import FastAPI
@@ -9,6 +10,7 @@ from src.preprocess import preprocess_input
 
 app = FastAPI(title="Telco Churn Prediction API", version="1.0.0")
 
+# Model ve kolon listesi uygulama başladığında bir kez yüklenir; her istekte yeniden okunmaz.
 with open("models/model.pkl", "rb") as f:
     model = pickle.load(f)
 

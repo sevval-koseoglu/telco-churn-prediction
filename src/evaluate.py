@@ -12,16 +12,16 @@ from sklearn.metrics import (
 
 def evaluate_model(model, X_test: pd.DataFrame, y_test: pd.Series, model_name: str = "Model") -> dict:
     """
-    Verilen bir modeli test verisi uzerinde degerlendirir ve metrikleri rapor eder.
+    Verilen modeli test verisi üzerinde değerlendirir ve metrikleri raporlar.
 
     Args:
-        model: Egitilmis sklearn modeli.
-        X_test: Test ozellik matrisi.
-        y_test: Gercek etiketler.
-        model_name: Raporda gorunecek model ismi.
+        model: Eğitilmiş sklearn modeli.
+        X_test: Test özellik matrisi.
+        y_test: Gerçek etiketler.
+        model_name: Raporda görünecek model adı.
 
     Returns:
-        dict: Hesaplanan metrikler.
+        dict: Hesaplanan metrikler (accuracy, precision, recall, f1_score).
     """
     y_pred = model.predict(X_test)
 
@@ -34,27 +34,27 @@ def evaluate_model(model, X_test: pd.DataFrame, y_test: pd.Series, model_name: s
     }
 
     print(f"\n{'=' * 50}")
-    print(f"  {model_name} - Degerlendirme Raporu")
+    print(f"  {model_name} — Değerlendirme Raporu")
     print(f"{'=' * 50}")
     print(f"  Accuracy  : {metrics['accuracy']:.4f}")
     print(f"  Precision : {metrics['precision']:.4f}")
     print(f"  Recall    : {metrics['recall']:.4f}")
-    print(f"  F1 Score  : {metrics['f1_score']:.4f}")
-    print(f"\n  Siniflandirma Raporu:\n{classification_report(y_test, y_pred, target_names=['No Churn', 'Churn'])}")
-    print(f"  Confusion Matrix:\n{confusion_matrix(y_test, y_pred)}\n")
+    print(f"  F1 Skoru  : {metrics['f1_score']:.4f}")
+    print(f"\n  Sınıflandırma Raporu:\n{classification_report(y_test, y_pred, target_names=['Kayıp Yok', 'Churn'])}")
+    print(f"  Karışıklık Matrisi:\n{confusion_matrix(y_test, y_pred)}\n")
 
     return metrics
 
 
 def compare_models(results: list[dict]) -> dict:
     """
-    Birden fazla modelin metriklerini karsilastirir ve F1 Score'a gore kazanani secer.
+    Birden fazla modelin metriklerini karşılaştırır ve F1 Skoru'na göre kazananı seçer.
 
     Args:
-        results: Her biri evaluate_model() ciktisi olan dict listesi.
+        results: Her biri evaluate_model() çıktısı olan dict listesi.
 
     Returns:
-        dict: En yuksek F1 Score'a sahip modelin metrikleri.
+        dict: En yüksek F1 Skoru'na sahip modelin metrikleri.
     """
     best = max(results, key=lambda r: r["f1_score"])
     print(f"\n>>> Kazanan Model: {best['model']} (F1: {best['f1_score']:.4f}) <<<\n")
@@ -62,7 +62,8 @@ def compare_models(results: list[dict]) -> dict:
 
 
 if __name__ == "__main__":
-    # Dogrudan calistirma icin: python src/evaluate.py
+    # Bu blok yalnızca doğrudan çalıştırıldığında devreye girer.
+    # Kullanım: python src/evaluate.py
     df = pd.read_csv("data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
     df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
     df = df.dropna()
@@ -82,4 +83,4 @@ if __name__ == "__main__":
     with open("models/model.pkl", "rb") as f:
         model = pickle.load(f)
 
-    evaluate_model(model, X_test, y_test, model_name="Kayitli Model")
+    evaluate_model(model, X_test, y_test, model_name="Kayıtlı Model")

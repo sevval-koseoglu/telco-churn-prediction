@@ -1,33 +1,33 @@
-# ---- Base Image ----
+# ---- Temel İmaj ----
 FROM python:3.11-slim
 
-# ---- Metadata ----
+# ---- Meta Veriler ----
 LABEL maintainer="telco-churn-team"
 LABEL description="Telco Churn Prediction API"
 
-# ---- Sistem bagimliliklar ----
+# ---- Sistem Bağımlılıkları ----
 RUN apt-get update && \
     apt-get install -y --no-install-recommends gcc && \
     rm -rf /var/lib/apt/lists/*
 
-# ---- Calisma dizini ----
+# ---- Çalışma Dizini ----
 WORKDIR /app
 
-# ---- Bagimliliklari kopyala ve yukle ----
+# ---- Bağımlılıkları Kopyala ve Kur ----
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# ---- Proje dosyalarini kopyala ----
+# ---- Proje Dosyalarını Kopyala ----
 COPY . .
 
-# ---- Guvenlik: root olmayan kullanici ----
+# ---- Güvenlik: Root Olmayan Kullanıcı ----
 RUN adduser --disabled-password --gecos "" appuser && \
     chown -R appuser:appuser /app
 USER appuser
 
-# ---- Port ----
+# ---- Uygulama Portu ----
 EXPOSE 8000
 
-# ---- Baslat ----
+# ---- Başlatma Komutu ----
 CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]

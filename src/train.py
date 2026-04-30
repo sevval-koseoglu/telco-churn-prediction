@@ -6,59 +6,62 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_score
 import os
 
-# ---- Veri Yukleme ve Temizleme ----
+# Ham veriyi oku; TotalCharges sütununu sayısala çevir ve eksik değerleri çıkar.
 df = pd.read_csv("data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
 df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
 df = df.dropna()
 df = df.drop("customerID", axis=1)
+
+# Hedef sütunu sayısala dönüştür ve kategorik değişkenleri one-hot encode et.
 df["Churn"] = df["Churn"].map({"Yes": 1, "No": 0})
 df = pd.get_dummies(df, drop_first=True)
 
 X = df.drop("Churn", axis=1)
 y = df["Churn"]
 
+# Kolon sırası eğitim sırasında belirlenir; tahmin aşamasında aynı sıra kullanılır.
 feature_columns = X.columns.tolist()
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# ---- Model 1: Logistic Regression ----
+# İlk model: Lojistik Regresyon — hızlı ve yorumlanabilir bir temel oluşturur.
 log_reg = LogisticRegression(max_iter=1000, random_state=42)
 log_reg.fit(X_train, y_train)
 lr_preds = log_reg.predict(X_test)
 
 print("=" * 50)
-print("Model 1: Logistic Regression")
+print("Model 1: Lojistik Regresyon")
 print(f"  Accuracy  : {accuracy_score(y_test, lr_preds):.4f}")
 print(f"  Precision : {precision_score(y_test, lr_preds):.4f}")
 print(f"  Recall    : {recall_score(y_test, lr_preds):.4f}")
-print(f"  F1 Score  : {f1_score(y_test, lr_preds):.4f}")
+print(f"  F1 Skoru  : {f1_score(y_test, lr_preds):.4f}")
 
-# ---- Model 2: Random Forest ----
+# İkinci model: Rastgele Orman — doğrusal olmayan ilişkileri de yakalayabilir.
 rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
 rf_model.fit(X_train, y_train)
 rf_preds = rf_model.predict(X_test)
 
 print("=" * 50)
-print("Model 2: Random Forest")
+print("Model 2: Rastgele Orman")
 print(f"  Accuracy  : {accuracy_score(y_test, rf_preds):.4f}")
 print(f"  Precision : {precision_score(y_test, rf_preds):.4f}")
 print(f"  Recall    : {recall_score(y_test, rf_preds):.4f}")
-print(f"  F1 Score  : {f1_score(y_test, rf_preds):.4f}")
+print(f"  F1 Skoru  : {f1_score(y_test, rf_preds):.4f}")
 print("=" * 50)
 
-# ---- En iyi modeli F1 Score'a gore sec ----
+# Veri dengesiz olduğundan yalnızca Accuracy yerine F1 Skoru ile karşılaştırma yapılır.
 lr_f1 = f1_score(y_test, lr_preds)
 rf_f1 = f1_score(y_test, rf_preds)
 
 if rf_f1 >= lr_f1:
     best_model = rf_model
-    best_name = "Random Forest"
+    best_name = "Rastgele Orman"
 else:
     best_model = log_reg
-    best_name = "Logistic Regression"
+    best_name = "Lojistik Regresyon"
 
 print(f"Kazanan model: {best_name} (F1: {max(lr_f1, rf_f1):.4f})")
 
-# ---- Modelleri Kaydet ----
+# Kazanan modeli ve eğitimde kullanılan kolon sırasını diske yaz.
 os.makedirs("models", exist_ok=True)
 
 with open("models/model.pkl", "wb") as f:

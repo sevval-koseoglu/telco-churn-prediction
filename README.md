@@ -1,73 +1,77 @@
 # Telco Churn Prediction
 
-Musteri kayip (churn) tahmini yapan bir makine ogrenmesi projesidir.
-**P2P Veri Bilimi Challenge** kapsaminda gelistirilmistir.
+Müşteri kaybını (churn) tahmin etmek için geliştirilmiş bir makine öğrenmesi projesidir.
+**P2P Veri Bilimi Challenge** kapsamında geliştirilmiştir.
 
-Telco sektorune ait gercek dunya verisi uzerinde birden fazla model egitilip karsilastirilmis, en basarili model bir FastAPI servisi araciligiyla `/predict` endpoint'i olarak sunulmustur.
+Telekomunikasyon sektörüne ait gerçek dünya verisi üzerinde birden fazla model eğitilip karşılaştırılmış; en başarılı model FastAPI aracılığıyla `/predict` endpoint'i olarak sunulmuştur. Gradio tabanlı basit bir web arayüzü de mevcuttur.
 
 ---
 
-## Icerik
+## İçindekiler
 
-- [Amac ve Kapsam](#amac-ve-kapsam)
-- [Kullanilan Veri Seti](#kullanilan-veri-seti)
-- [Proje Yapisi](#proje-yapisi)
+- [Amaç ve Kapsam](#amaç-ve-kapsam)
+- [Kullanılan Veri Seti](#kullanılan-veri-seti)
+- [Proje Yapısı](#proje-yapısı)
 - [Kurulum](#kurulum)
-- [Model Egitimi ve Karsilastirma](#model-egitimi-ve-karsilastirma)
-- [API Kullanimi](#api-kullanimi)
-- [Docker ile Calistirma](#docker-ile-calistirma)
+- [Model Eğitimi ve Karşılaştırma](#model-eğitimi-ve-karşılaştırma)
+- [API Kullanımı](#api-kullanımı)
+- [Arayüz ile Çalıştırma](#arayüz-ile-çalıştırma)
+- [Docker ile Çalıştırma](#docker-ile-çalıştırma)
 - [Testler](#testler)
-- [Katki](#katki)
+- [Katkı](#katkı)
 
 ---
 
-## Amac ve Kapsam
+## Amaç ve Kapsam
 
-Bu proje asagidaki P2P Challenge gereksinimlerini karsilar:
+Bu proje aşağıdaki P2P Challenge gereksinimlerini karşılar:
 
 | Gereksinim | Durum |
 |---|---|
-| Veri setinin dogru anlasilmasi ve islenmesi | Tamamlandi |
-| Modelin dogru egitilmesi ve calismasi | Tamamlandi (LogReg + Random Forest) |
-| Tahmin uretme yetenegi | Tamamlandi (`/predict` endpoint) |
-| API servisinin duzgun calismasi | Tamamlandi (FastAPI) |
-| Kod yapisinin anlasilir ve duzenli olmasi | Tamamlandi (modular mimari) |
-| Birden fazla model denenmesi ve karsilastirilmasi | Tamamlandi (F1 Score bazli secim) |
-| Basit dokumantasyon hazirlanmasi | Bu dosya |
-| Opsiyonel Docker kullanimi | Tamamlandi |
+| Veri setinin doğru anlaşılması ve işlenmesi | Tamamlandı |
+| Modelin doğru eğitilmesi ve çalışması | Tamamlandı (Lojistik Regresyon + Rastgele Orman) |
+| Tahmin üretme yeteneği | Tamamlandı (`/predict` endpoint'i) |
+| API servisinin düzgün çalışması | Tamamlandı (FastAPI) |
+| Kod yapısının anlaşılır ve düzenli olması | Tamamlandı (modüler mimari) |
+| Birden fazla model denenmesi ve karşılaştırılması | Tamamlandı (F1 Skoru bazlı seçim) |
+| Basit dokümantasyon hazırlanması | Bu dosya |
+| Opsiyonel Docker kullanımı | Tamamlandı |
+| Opsiyonel basit arayüz geliştirilmesi | Tamamlandı (Gradio) |
 
 ---
 
-## Kullanilan Veri Seti
+## Kullanılan Veri Seti
 
 **Kaggle: Telco Customer Churn**
 `data/WA_Fn-UseC_-Telco-Customer-Churn.csv`
 
-- 7043 musteri kaydı, 21 ozellik
-- Hedef degisken: `Churn` (Yes / No)
-- Kategorik ve sayisal karisik yapi — one-hot encoding uygulanmistir
-- EDA icin: `notebooks/eda.ipynb`
+- 7.043 müşteri kaydı, 21 özellik
+- Hedef değişken: `Churn` (Yes / No)
+- Kategorik ve sayısal karışık yapı — one-hot encoding uygulanmıştır
+- Keşifsel veri analizi için: `notebooks/eda.ipynb`
 
 ---
 
-## Proje Yapisi
+## Proje Yapısı
 
 ```
 telco-churn-prediction/
 ├── api/
-│   └── main.py              # FastAPI app — /predict endpoint
+│   └── main.py              # FastAPI uygulaması — /predict endpoint'i
 ├── src/
-│   ├── train.py              # Model egitimi: LogReg vs RF, karsilastirma, kaydetme
+│   ├── train.py              # Model eğitimi: karşılaştırma ve kaydetme
 │   ├── evaluate.py           # Metrik hesaplama ve raporlama
-│   ├── preprocess.py         # Veri on-isleme (get_dummies, kolon hizalama)
-│   └── predict.py            # (Yedek tahmin modulu — gelistirilecek)
+│   ├── preprocess.py         # Veri ön işleme (kodlama, kolon hizalama)
+│   └── predict.py            # (Geliştirme aşamasında)
+├── ui/
+│   └── app.py                # Gradio web arayüzü
 ├── data/
 │   └── WA_Fn-UseC_-Telco-Customer-Churn.csv
 ├── models/
-│   ├── model.pkl             # En iyi egitilmis model (otomatik secilir)
-│   └── feature_columns.pkl  # Egitimde kullanilan kolon siralama listesi
+│   ├── model.pkl             # En iyi eğitilmiş model (otomatik seçilir)
+│   └── feature_columns.pkl  # Eğitimde kullanılan kolon sırası
 ├── notebooks/
-│   └── eda.ipynb             # Kesifsel veri analizi
+│   └── eda.ipynb             # Keşifsel veri analizi
 ├── requirements.txt
 ├── Dockerfile
 ├── docker-compose.yml
@@ -83,11 +87,11 @@ telco-churn-prediction/
 **1. Repoyu klonla:**
 
 ```bash
-git clone https://github.com/<kullanici-adi>/telco-churn-prediction.git
+git clone https://github.com/<kullanıcı-adı>/telco-churn-prediction.git
 cd telco-churn-prediction
 ```
 
-**2. Sanal ortam olustur ve aktif et:**
+**2. Sanal ortam oluştur ve aktif et:**
 
 ```bash
 python -m venv venv
@@ -99,37 +103,37 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-**3. Bagimliliklari yukle:**
+**3. Bağımlılıkları yükle:**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-**4. Modeli egit:**
+**4. Modeli eğit:**
 
 ```bash
 python src/train.py
 ```
 
-Cikti ornegi:
+Çıktı örneği:
 ```
 ==================================================
-Model 1: Logistic Regression
-  Accuracy  : 0.8027
-  Precision : 0.6623
-  Recall    : 0.5582
-  F1 Score  : 0.6059
+Model 1: Lojistik Regresyon
+  Accuracy  : 0.7875
+  Precision : 0.6206
+  Recall    : 0.5160
+  F1 Skoru  : 0.5635
 ==================================================
-Model 2: Random Forest
+Model 2: Rastgele Orman
   Accuracy  : 0.7934
   Precision : 0.6441
   Recall    : 0.5078
-  F1 Score  : 0.5679
+  F1 Skoru  : 0.5679
 ==================================================
-Kazanan model: Logistic Regression (F1: 0.6059)
+Kazanan model: Rastgele Orman (F1: 0.5679)
 ```
 
-**5. API'yi baslat:**
+**5. API'yi başlat:**
 
 ```bash
 uvicorn api.main:app --host 0.0.0.0 --port 8000
@@ -137,33 +141,33 @@ uvicorn api.main:app --host 0.0.0.0 --port 8000
 
 ---
 
-## Model Egitimi ve Karsilastirma
+## Model Eğitimi ve Karşılaştırma
 
-`src/train.py` calistirildiginda:
+`src/train.py` çalıştırıldığında:
 
-1. **Logistic Regression** (max_iter=1000) egitilir.
-2. **Random Forest** (n_estimators=100) egitilir.
-3. Her iki modelin **Accuracy / Precision / Recall / F1** metrikleri konsola yazdirilir.
-4. **F1 Score** en yuksek olan model `models/model.pkl` olarak kaydedilir.
+1. **Lojistik Regresyon** (max_iter=1000) eğitilir.
+2. **Rastgele Orman** (n_estimators=100) eğitilir.
+3. Her iki modelin **Accuracy / Precision / Recall / F1** metrikleri konsola yazdırılır.
+4. **F1 Skoru** en yüksek olan model `models/model.pkl` olarak kaydedilir.
 
-**Neden F1 Score?** Churn probleminde veri dengesizdir; sadece Accuracy yerine hem Precision hem Recall'i dengeleyen F1, daha guvenilir bir secim kriteridir.
+**Neden F1 Skoru?** Churn probleminde veri dengesizdir; yalnızca Accuracy yerine hem Precision hem Recall'ı dengeleyen F1, daha güvenilir bir seçim kriteridir.
 
-**Yeni bir model denemek istiyorsan:**
+**Yeni bir model denemek istersen:**
 
 ```python
-# src/train.py icinde:
+# src/train.py içinde:
 from sklearn.ensemble import GradientBoostingClassifier
 gb_model = GradientBoostingClassifier(n_estimators=100, random_state=42)
 gb_model.fit(X_train, y_train)
 ```
 
-`compare_models()` fonksiyonuna bu modeli de ekle; kazanan otomatik secer.
+`compare_models()` fonksiyonuna bu modeli de ekle; kazanan otomatik seçilir.
 
 ---
 
-## API Kullanimi
+## API Kullanımı
 
-### Saglik Kontrolu
+### Sağlık Kontrolü
 
 ```bash
 curl http://localhost:8000/
@@ -202,45 +206,67 @@ curl -X POST http://localhost:8000/predict \
   }'
 ```
 
-**Cevap:**
+**Yanıt:**
 
 ```json
 {
   "prediction": 0,
-  "churn_probability": 0.3742
+  "churn_probability": 0.4694
 }
 ```
 
-| Alan | Anlami |
+| Alan | Anlamı |
 |---|---|
-| `prediction` | `0` = Kayip yok, `1` = Musteri gidecek (churn) |
-| `churn_probability` | Churn olasıligi — 0.0 ile 1.0 arasinda |
+| `prediction` | `0` = Kayıp yok, `1` = Müşteri gidecek (churn) |
+| `churn_probability` | Churn olasılığı — 0.0 ile 1.0 arasında |
 
-**Interaktif Dokumantasyon:** `http://localhost:8000/docs` (FastAPI Swagger UI)
+**İnteraktif Dokümantasyon:** `http://localhost:8000/docs` (FastAPI Swagger UI)
 
 ---
 
-## Docker ile Calistirma
+## Arayüz ile Çalıştırma
 
-**Hizli baslangic:**
+Proje, tarayıcı üzerinden kolayca test edilebilen bir Gradio arayüzüne sahiptir.
+
+**1. API'nin çalıştığından emin ol:**
 
 ```bash
-# 1. Modeli egit (ilk kurulumda bir kez)
+uvicorn api.main:app --host 0.0.0.0 --port 8000
+```
+
+**2. Arayüzü başlat (farklı bir terminalde):**
+
+```bash
+python ui/app.py
+```
+
+Tarayıcıda otomatik olarak `http://localhost:7860` açılır.
+
+Arayüzde müşteri bilgilerini forma girip **"Tahmin Et"** butonuna tıklaman yeterlidir.
+
+---
+
+## Docker ile Çalıştırma
+
+**Hızlı başlangıç:**
+
+```bash
+# 1. Modeli eğit (ilk kurulumda bir kez)
 python src/train.py
 
-# 2. Docker ile ayaga kaldir
+# 2. Docker ile ayağa kaldır
 docker-compose up --build
 ```
 
 API: `http://localhost:8000`
 
-**Tek komutla durdurmak icin:**
+**Durdurmak için:**
 
 ```bash
 docker-compose down
 ```
 
-**Yalnizca Dockerfile ile:**
+**Yalnızca Dockerfile ile:**
 
 ```bash
 docker build -t telco-churn-api .
@@ -251,34 +277,34 @@ docker run -p 8000:8000 telco-churn-api
 
 ## Testler
 
-**API saglik testi:**
+**API sağlık testi:**
 
 ```bash
 curl http://localhost:8000/
 ```
 
-**Model egitim dogruluğu:**
+**Model eğitim doğruluğu:**
 
 ```bash
 python src/train.py
-# Cikti: Her iki modelin metrikleri ve kazanani
+# Çıktı: Her iki modelin metrikleri ve kazananı
 ```
 
-**Model degerlendirme (ayri script):**
+**Model değerlendirme (ayrı script):**
 
 ```bash
 python src/evaluate.py
-# Kaydedilmis modeli test veri seti uzerinde tekrar raporlar
+# Kaydedilmiş modeli test verisi üzerinde yeniden raporlar
 ```
 
 ---
 
-## Katki
+## Katkı
 
 1. Repoyu fork'la
-2. Yeni branch olustur: `git checkout -b feature/yeni-model`
-3. Degisikliklerini commit et: `git commit -m "feat: XGBoost modeli eklendi"`
-4. Push et ve Pull Request ac
+2. Yeni branch oluştur: `git checkout -b feature/yeni-model`
+3. Değişikliklerini commit et: `git commit -m "feat: XGBoost modeli eklendi"`
+4. Push et ve Pull Request aç
 
 ---
 
