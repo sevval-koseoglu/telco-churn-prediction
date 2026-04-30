@@ -22,14 +22,14 @@ def evaluate_model(model, X_test: pd.DataFrame, y_test: pd.Series, model_name: s
     }
 
     print(f"\n{'=' * 50}")
-    print(f"  {model_name} - Degerlendirme Raporu")
+    print(f"  {model_name} — Değerlendirme Raporu")
     print(f"{'=' * 50}")
     print(f"  Accuracy  : {metrics['accuracy']:.4f}")
     print(f"  Precision : {metrics['precision']:.4f}")
     print(f"  Recall    : {metrics['recall']:.4f}")
-    print(f"  F1 Score  : {metrics['f1_score']:.4f}")
-    print(f"\n  Siniflandirma Raporu:\n{classification_report(y_test, y_pred, target_names=['No Churn', 'Churn'])}")
-    print(f"  Confusion Matrix:\n{confusion_matrix(y_test, y_pred)}\n")
+    print(f"  F1 Skoru  : {metrics['f1_score']:.4f}")
+    print(f"\n  Sınıflandırma Raporu:\n{classification_report(y_test, y_pred, target_names=['Kayıp Yok', 'Churn'])}")
+    print(f"  Karışıklık Matrisi:\n{confusion_matrix(y_test, y_pred)}\n")
 
     return metrics
 

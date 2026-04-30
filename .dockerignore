@@ -11,7 +11,7 @@ venv/
 .venv/
 env/
 
-# Ortam degiskenleri
+# Ortam değişkenleri
 .env
 .env.*
 
@@ -33,11 +33,11 @@ notebooks/
 .DS_Store
 Thumbs.db
 
-# Docker (ic ice build onleme)
+# Docker (iç içe build önleme)
 Dockerfile
 docker-compose.yml
 .dockerignore
 
-# Dokuemantasyon
+# Dokümantasyon
 README.md
 LICENSE
