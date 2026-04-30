@@ -6,7 +6,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_score
 import os
 
-# Ham veriyi oku; TotalCharges sütununu sayısala çevir ve eksik değerleri çıkar.
 df = pd.read_csv("data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
 df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
 df = df.dropna()
@@ -23,7 +22,6 @@ y = df["Churn"]
 feature_columns = X.columns.tolist()
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# İlk model: Lojistik Regresyon — hızlı ve yorumlanabilir bir temel oluşturur.
 log_reg = LogisticRegression(max_iter=1000, random_state=42)
 log_reg.fit(X_train, y_train)
 lr_preds = log_reg.predict(X_test)
@@ -35,7 +33,6 @@ print(f"  Precision : {precision_score(y_test, lr_preds):.4f}")
 print(f"  Recall    : {recall_score(y_test, lr_preds):.4f}")
 print(f"  F1 Skoru  : {f1_score(y_test, lr_preds):.4f}")
 
-# İkinci model: Rastgele Orman — doğrusal olmayan ilişkileri de yakalayabilir.
 rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
 rf_model.fit(X_train, y_train)
 rf_preds = rf_model.predict(X_test)
@@ -48,7 +45,6 @@ print(f"  Recall    : {recall_score(y_test, rf_preds):.4f}")
 print(f"  F1 Skoru  : {f1_score(y_test, rf_preds):.4f}")
 print("=" * 50)
 
-# Veri dengesiz olduğundan yalnızca Accuracy yerine F1 Skoru ile karşılaştırma yapılır.
 lr_f1 = f1_score(y_test, lr_preds)
 rf_f1 = f1_score(y_test, rf_preds)
 
@@ -61,7 +57,6 @@ else:
 
 print(f"Kazanan model: {best_name} (F1: {max(lr_f1, rf_f1):.4f})")
 
-# Kazanan modeli ve eğitimde kullanılan kolon sırasını diske yaz.
 os.makedirs("models", exist_ok=True)
 
 with open("models/model.pkl", "wb") as f:
